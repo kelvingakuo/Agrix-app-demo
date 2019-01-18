@@ -4,3 +4,4 @@ libs_test.py
 data/crowdai_test/*
 data/crowdai_train/crowdai/*
 logs.log
+saved_models/
