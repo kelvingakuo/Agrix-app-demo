@@ -24,10 +24,12 @@ mkdir saved_models
 2. Extract train.tar into 'data/crowdai_train' and test.tar into 'data/crowdai_test'
 
 
-##USAGE
+## USAGE
 1. Run
 ```bash
-python train_nn.py
+python train_nn.py modelName
 ```
+
+The modelName is either 'alexnet' or 'vgg16'
 
 2. Wait

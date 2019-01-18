@@ -11,7 +11,7 @@ import sys
 from log_config import logger
 
 
-def main(setType, a = None, b = None):
+def main(setType, nn, a = None, b = None):
 	if(setType == 'train'):
 		folders = glob.glob('data/crowdai_train/crowdai/*') # Get folder names
 		parts = [Path(folder).parts[3] for folder in folders]
@@ -23,7 +23,12 @@ def main(setType, a = None, b = None):
 		train_data['label'] = []
 		train_data['location'] = []
 
-		logger.info('Creating train arrays...')
+		logger.info('Creating train arrays for {} ...'.format(nn))
+
+		if(nn == 'alexnet'):
+			dim = 227
+		elif(nn == 'vgg16'):
+			dim = 224
 
 		j = 0 # Classes index
 		while(j < len(classes)):
@@ -40,7 +45,7 @@ def main(setType, a = None, b = None):
 				logger.info('Creating data point {} ...'.format(img))
 
 				rd = cv2.imread(img)
-				arr = cv2.resize(rd, (227, 227))
+				arr = cv2.resize(rd, (dim, dim))
 
 				arr = arr.astype('uint64')
 

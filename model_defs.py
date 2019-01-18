@@ -52,69 +52,70 @@ def alexnet():
 	#output layer
 	model.add(Activation('softmax'))
 
-	model.compile(loss = 'categorical_crossentropy' ,optimizer='adam',metrics=['accuracy']) 
+	model.compile(loss = 'categorical_crossentropy' ,optimizer='adam', metrics=['accuracy']) 
 
 	return model
 
 
-def Vgg16(inputs):
-	X = Input(inputs)
+def vgg16():
+	model = Sequential()
 
 	#Convolution layer 1
-	conv_1 = Conv2D(64,(3,3), padding='same',)(X)
-	conv_1 = Activation('relu')(conv_1)
-	conv_1 = Conv2D(64,(3,3),padding='same')(conv_1)
-	conv_1 = Activation('relu')(conv_1)
-	conv_1 = MaxPooling2D(pool_size=(2,2),strides=(2,2))(conv_1)	
+	model.add(Conv2D(64,(3,3), padding='same', data_format = 'channels_last', input_shape = (224, 224, 3)))
+	model.add(Activation('relu'))
+	model.add(Conv2D(64,(3,3),padding='same'))
+	model.add(Activation('relu'))
+	model.add(MaxPooling2D(pool_size=(2,2),strides=(2,2)))	
 
 	#convolution layer 2
-	conv_2 = Conv2D(128,(3,3), padding='same')(conv_1)
-	conv_2 = Activation('relu')(conv_2)
-	conv_2 = Conv2D(128,(3,3),padding='same')(conv_2)
-	conv_2 = Activation('relu')(conv_2)
-	conv_2 = MaxPooling2D(pool_size=(2,2),strides=(2,2))(conv_2)
+	model.add(Conv2D(128,(3,3), padding='same'))
+	model.add(Activation('relu'))
+	model.add(Conv2D(128,(3,3),padding='same'))
+	model.add(Activation('relu'))
+	model.add(MaxPooling2D(pool_size=(2,2),strides=(2,2)))
 
 	#convolution layer 3
-	conv_3 = Conv2D(256,(3,3), padding='same')(conv_2)
-	conv_3 = Activation('relu')(conv_3)
-	conv_3 = Conv2D(256, (3,3), padding='same')(conv_3)
-	conv_3 = Activation('relu')(conv_3)
-	conv_3 = MaxPooling2D(pool_size=(2,2),strides=(2,2))(conv_3)
+	model.add(Conv2D(256,(3,3), padding='same'))
+	model.add(Activation('relu'))
+	model.add(Conv2D(256, (3,3), padding='same'))
+	model.add(Activation('relu'))
+	model.add(MaxPooling2D(pool_size=(2,2),strides=(2,2)))
 
 	#convolution layer 4
-	conv_4 = Conv2D(512,(3,3), padding='same')(conv_3)
-	conv_4 = Activation('relu')(conv_4)
-	conv_4 = Conv2D(512,(3,3),padding='same')(conv_4)
-	conv_4 = Activation('relu')(conv_4)
-	conv_4 = Conv2D(512,(3,3),padding='same')(conv_4)
-	conv_4 = Activation('relu')(conv_4)
-	conv_4 = MaxPooling2D(pool_size=(2,2),strides=(2,2))(conv_4)
+	model.add(Conv2D(512,(3,3), padding='same'))
+	model.add(Activation('relu'))
+	model.add(Conv2D(512,(3,3),padding='same'))
+	model.add(Activation('relu'))
+	model.add(Conv2D(512,(3,3),padding='same'))
+	model.add(Activation('relu'))
+	model.add(MaxPooling2D(pool_size=(2,2),strides=(2,2)))
 
 	#convolution layer 5
-	conv_5 = Conv2D(512,(3,3),padding='same')(conv_4)
-	conv_5 = Activation('relu')(conv_5)
-	conv_5 = Conv2D(512,(3,3),padding='same')(conv_5)
-	conv_5 = Activation('relu')(conv_5)
-	conv_5 = Conv2D(512,(3,3),padding='same')(conv_5)
-	conv_5 = Activation('relu')(conv_5)
-	conv_5 = MaxPooling2D(pool_size=(2,2),strides=(2,2))(conv_5)
+	model.add(Conv2D(512,(3,3),padding='same'))
+	model.add(Activation('relu'))
+	model.add(Conv2D(512,(3,3),padding='same'))
+	model.add(Activation('relu'))
+	model.add(Conv2D(512,(3,3),padding='same'))
+	model.add(Activation('relu'))
+	model.add(MaxPooling2D(pool_size=(2,2),strides=(2,2)))
 
-	flat = Flatten()(conv_5)
+	model.add(Flatten())
 
 	#fully connected layer 1
-	dense_1 = Dense(4096)(flat)
-	dense_1 = Activation('relu')
+	model.add(Dense(4096))
+	model.add(Activation('relu'))
 
 	#fully connected layer 2
-	dense_2 = Dense(4096)(dense_1)
-	dense_2 = Activation('relu')(dense_2)
+	model.add(Dense(4096))
+	model.add(Activation('relu'))
 
 	#output
-	output = Dense(1000)(dense_2)
-	output = Activation('softmax')(output)
+	model.add(Dense(38))
+	model.add(Activation('softmax'))
 
-	model = Model(input = inputs, output=output)
 
-	model.compile(loss=categorical_crossentropy, optimizer='adam', metrics=['accuracy'])  
+	model.compile(loss = 'categorical_crossentropy', optimizer='adam', metrics=['accuracy'])  
+
+	return model
 
 

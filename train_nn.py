@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 import os
+import sys
 import time
+
 
 from keras.models import load_model
 from sklearn.model_selection import train_test_split
@@ -10,23 +12,39 @@ import model_defs
 from log_config import logger
 import preprocessing
 
-def train(X, Y, iteration):
+def train(X, Y, iteration, whichOne):
 	XTrain, XTest, yTrain, yTest = train_test_split(X, Y, test_size=0.33, random_state=42)
 
-	if(os.path.exists('saved_models/agrix_alexnet.h5')):
-		logger.info('Reading model from file. Time to improve!!')
-		alexnet = load_model('saved_models/agrix_alexnet.h5')
-	else:
-		logger.info('Instantiating model for the first time')
-		alexnet = model_defs.alexnet()
+	if(whichOne == 'alexnet'):
+		if(os.path.exists('saved_models/agrix_alexnet.h5')):
+			logger.info('Reading alexnet from file. Time to improve!!')
+			model = load_model('saved_models/agrix_alexnet.h5')
+		else:
+			logger.info('Instantiating model for the first time')
+			model = model_defs.alexnet()
+			
+	elif(whichOne == 'vgg16'):
+		if(os.path.exists('saved_models/agrix_vgg16.h5')):
+			logger.info('Reading vgg16 from file. Time to improve!!')
+			model = load_model('saved_models/agrix_vgg16.h5')
+		else:
+			logger.info('Instantiating model for the first time')
+			model = model_defs.vgg16()
 
 
-	alexnet.fit(XTrain, yTrain, batch_size = 64, epochs = 100, validation_split = 0.33, shuffle = True, verbose = 1)
-	alexnet.save('saved_models/agrix_alexnet.h5')
-	logger.info('Saved model to file.')
-
+	# Run model
+	model.fit(XTrain, yTrain, batch_size = 64, epochs = 50, validation_split = 0.33, shuffle = True, verbose = 1)
 	scores = alexnet.evaluate(XTest, yTest, batch_size = 64, verbose = 1)
 	logger.info("PERFORMANCE SCORE: {}: {}".format(alexnet.metrics_names[1], scores[1] * 100))
+
+	if(whichOne == 'alexnet'):
+		model.save('saved_models/agrix_alexnet.h5')
+		logger.info('Saved alexnet to file.')
+	elif(whichOne == 'vgg16'):
+		model.save('saved_models/agrix_vgg16.h5')
+		logger.info('Saved vgg16 to file.')
+
+
 
 
 
@@ -47,11 +65,13 @@ if __name__ == '__main__':
 	iteration = 0
 	top = 125 # The total pics in the class with fewest images + 1
 
+	theModel = sys.argv(1)
+
 	while (p < top):
 		logger.info('Reading DF...')
-		df = preprocessing.main('train', p, q) #Let's do (q - p) pics from all classes per iter
+		df = preprocessing.main('train', theModel, p, q) #Let's do (q - p) pics from all classes per iter
 
-		X = np.array(df['image'].tolist())
+		X = np.array(df['image'].tolist()) # Generate array of arrays for X, and array of vectors for y
 		df['vector_labels'] = pd.get_dummies(df['label']).values.tolist()
 		Y = np.array(df['vector_labels'].tolist())
 
@@ -59,7 +79,7 @@ if __name__ == '__main__':
 		logger.info('Y.shape: {}'.format(Y.shape))
 		logger.info('Starting training...')
 
-		train(X,  Y, iteration)
+		train(X,  Y, iteration, theModel)
 
 		if(p is None):
 			break
