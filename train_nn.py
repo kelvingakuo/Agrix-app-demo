@@ -61,11 +61,11 @@ if __name__ == '__main__':
 	"""
 	# Training in batches because of the dataset size
 	p = 0 
-	q = 11
+	q = 21
 	iteration = 0
 	top = 125 # The total pics in the class with fewest images + 1
 
-	theModel = sys.argv(1)
+	theModel = sys.argv[1]
 
 	while (p < top):
 		logger.info('Reading DF...')
@@ -84,8 +84,8 @@ if __name__ == '__main__':
 		if(p is None):
 			break
 		else:
-			p = p + 10
-			q = q + 10 
+			p = p + 20
+			q = q + 20 
 			iteration = iteration + 1
 
 			time.sleep(60)
