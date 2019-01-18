@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+libs_test.py
+data/crowdai_test/*
+data/crowdai_train/crowdai/*
+logs.log
