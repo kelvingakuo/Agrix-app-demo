@@ -11,7 +11,7 @@ import sys
 from log_config import logger
 
 
-def main(setType, a, b):
+def main(setType, a = None, b = None):
 	if(setType == 'train'):
 		folders = glob.glob('data/crowdai_train/crowdai/*') # Get folder names
 		parts = [Path(folder).parts[3] for folder in folders]
@@ -31,7 +31,10 @@ def main(setType, a, b):
 			logger.info('Opening folder: {} ...'.format(lbl))
 			folder = folders[j]
 
-			imgs = glob.glob(folder+'/*.jpg')[a:b] #b - a pics
+			if((a is None) & (b is None)):
+				imgs = glob.glob(folder+'/*.jpg')
+			else:
+				imgs = glob.glob(folder+'/*.jpg')[a:b] #b - a pics
 
 			for img in imgs:
 				logger.info('Creating data point {} ...'.format(img))

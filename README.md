@@ -25,7 +25,9 @@ mkdir saved_models
 
 
 ##USAGE
-Run
+1. Run
 ```bash
 python train_nn.py
 ```
+
+2. Wait

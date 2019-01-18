@@ -33,13 +33,21 @@ def train(X, Y, iteration):
 
 
 if __name__ == '__main__':
+	"""
+	Due to RAM constraints, I'm reading the images in batches of 10 i.e. 10 images per class per iteration.
+
+	If access to GPU or a massive RAM, you can: 
+		1. Set p = None and q = None
+		2. Set p = 0 and q = (n + 1) where the n is the number of pictures to read per iteration
+			Make sure to update p and q by replacing 10 with n
+	"""
 	# Training in batches because of the dataset size
 	p = 0 
 	q = 11
 	iteration = 0
 	top = 125 # The total pics in the class with fewest images + 1
 
-	while (p < 38):
+	while (p < top):
 		logger.info('Reading DF...')
 		df = preprocessing.main('train', p, q) #Let's do (q - p) pics from all classes per iter
 
@@ -53,7 +61,11 @@ if __name__ == '__main__':
 
 		train(X,  Y, iteration)
 
-		p = p + 10
-		q = (q - 1) + 10 
+		if(p is None):
+			break
+		else:
+			p = p + 10
+			q = q + 10 
+			iteration = iteration + 1
 
-		time.sleep(60)
+			time.sleep(60)
