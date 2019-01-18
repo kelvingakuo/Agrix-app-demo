@@ -34,8 +34,8 @@ def train(X, Y, iteration, whichOne):
 
 	# Run model
 	model.fit(XTrain, yTrain, batch_size = 64, epochs = 50, validation_split = 0.33, shuffle = True, verbose = 1)
-	scores = alexnet.evaluate(XTest, yTest, batch_size = 64, verbose = 1)
-	logger.info("PERFORMANCE SCORE: {}: {}".format(alexnet.metrics_names[1], scores[1] * 100))
+	scores = model.evaluate(XTest, yTest, batch_size = 64, verbose = 1)
+	logger.info("PERFORMANCE SCORE: {}: {}".format(model.metrics_names[1], scores[1] * 100))
 
 	if(whichOne == 'alexnet'):
 		model.save('saved_models/agrix_alexnet.h5')
