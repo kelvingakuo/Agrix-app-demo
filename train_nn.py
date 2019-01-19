@@ -48,6 +48,11 @@ def train(X, Y, iteration, whichOne):
 
 
 
+def returnData(isItNone):
+	if(isItNone):
+		# Read all data
+
+	else:
 
 
 if __name__ == '__main__':
@@ -65,11 +70,11 @@ if __name__ == '__main__':
 	iteration = 0
 	top = 125 # The total pics in the class with fewest images + 1
 
+	logger.info('Reading DF...')
 	theModel = sys.argv[1]
 
-	while (p < top):
-		logger.info('Reading DF...')
-		df = preprocessing.main('train', theModel, p, q) #Let's do (q - p) pics from all classes per iter
+	if((p is None) || (q is None)):
+		df = preprocessing.main('train', theModel, None, None) #Read all data
 
 		X = np.array(df['image'].tolist()) # Generate array of arrays for X, and array of vectors for y
 		df['vector_labels'] = pd.get_dummies(df['label']).values.tolist()
@@ -80,10 +85,22 @@ if __name__ == '__main__':
 		logger.info('Starting training...')
 
 		train(X,  Y, iteration, theModel)
+	
+	else:
+		while (p < top):		
+			df = preprocessing.main('train', theModel, p, q) #Let's do (q - p) pics from all classes per iter
 
-		if(p is None):
-			break
-		else:
+			X = np.array(df['image'].tolist()) # Generate array of arrays for X, and array of vectors for y
+			df['vector_labels'] = pd.get_dummies(df['label']).values.tolist()
+			Y = np.array(df['vector_labels'].tolist())
+
+			logger.info('X.shape: {}'.format(X.shape))
+			logger.info('Y.shape: {}'.format(Y.shape))
+			logger.info('Starting training iter {}...'.format(iteration))
+
+			train(X,  Y, iteration, theModel)
+
+		
 			p = p + 20
 			q = q + 20 
 			iteration = iteration + 1
