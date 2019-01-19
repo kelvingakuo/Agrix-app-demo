@@ -48,13 +48,6 @@ def train(X, Y, iteration, whichOne):
 
 
 
-def returnData(isItNone):
-	if(isItNone):
-		# Read all data
-
-	else:
-
-
 if __name__ == '__main__':
 	"""
 	Due to RAM constraints, I'm reading the images in batches of 10 i.e. 10 images per class per iteration.
